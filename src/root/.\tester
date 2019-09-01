@@ -1,0 +1,1 @@
+{"data": [{"name": "Diffuser", "id": "diffuser-0", "mw": "29.3", "gamma": "1.4", "efficiency": "1"}, {"name": "Fan", "id": "fan-1", "mw": "28.8", "gamma": "1.4", "efficiency": ["1", true], "pr": "1", "B": "2", "Cb": "245"}]}

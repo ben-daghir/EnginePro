@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>EnginePro</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Button CSS -->
+    <link href="../vendor/bootstrap/css/button.css" rel="stylesheet">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/extra.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body style="padding-top: 0px">
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">EnginePro</a>
+            </div>
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Design</h2>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <!-- row -->
+                <div class="col-lg-8">
+                    <div id="engine-area" class="panel panel-default" style="transition: 2s cubic-bezier(.68,-0.55,.27,1.55);
+                    position: relative; height: 200px">
+                        <div class="panel-heading">
+                            <i class="fa fa-rocket fa-fw"></i> Rocket Prototyping
+                        </div>
+                        <a id="create-button" class="btn btn-secondary"
+                        style="transition: 0.5s cubic-bezier(.79,.14,.15,.86);
+                        height: 40px; width: 175px; top: 20%; position: relative">Create New Engine</a>
+                        <!-- Trigger/Open The Modal -->
+                        <div style="height: 5%; width: 100%">
+                        <div class="system-params" id="mach2">Freestream Mach: </div>
+                        <input class="system-params" style="width:100px" type="number" step="0.01" value=1.5 id="mach">
+                        <div class="system-params" id="ta2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Freestream Temperature (K): </div>
+                        <input class="system-params" style="width:100px" type="number" step="0.01" value=220 id="ta">
+                        <div class="system-params" id="pa2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Freestream Pressure (kPa): </div>
+                        <input class="system-params" style="width:100px" type="number" step="0.01" value=10 id="pa">
+                        <div id="parts-area" class="partsarea"></div>
+                        </div>
+                            <!-- This is where the parts go -->
+                        <div id="options" class="options">
+                            <button style="display:none" id="addComponentButton" class="btn2 success"> Add Component </button>
+                            <button style="display:none" id="runAnalysisButton" class="btn2 warning" onclick="return postAnalysis()"> Run Analysis </button>
+                            <button style="display:none" id="clearEngine" class="btn2 danger" onclick="return reselectEngine()"> Clear Engine </button>
+                        </div>
+                        <!-- The Create Engine Modal -->
+                        <div id="myModal" class="modal">
+
+                         <!-- Modal content -->
+                         <div class="modal-content" style="height: 340px;">
+                           <span class="close">&times;</span>
+                           <h2>Choose Your Configuration</h2>
+                           <div id="model-choices" style="height: 200px;text-align: left; margin-top: 40px">
+                               <div style="width: 155px; margin: auto;
+                               text-align: center; margin-top: -20px;">
+                                   <button class="btn2 info" onclick="return createNewEngine('everything')">All Components</button>
+                                   <button class="btn2 info" onclick="return createNewEngine('turbofan')">Turbofan</button>
+                                   <button class="btn2 info"onclick="return createNewEngine('turbojet')">Turbojet</button>
+                                   <button class="btn2 info" onclick="return createNewEngine('ramjet')">Ramjet</button>
+                                   <button class="btn2 info" onclick="return createNewEngine('new')">From Scratch</button>
+                               </div>
+                           </div>
+                         </div>
+                        </div>
+
+                        <!-- The Add Component Modal -->
+                        <div id="addComponentModal" class="modal">
+
+                         <!-- Modal content -->
+                         <div class="modal-content">
+                           <span style="float: right" href="#" class="close2">&times;</span>
+                           <div>
+                               <h3>Configure Your Component</h3>
+                               <div id="model-choices" style="text-align: left;
+                               margin: auto;position: relative;width: 80%;">
+                               <div style="position: relative; margin:auto; width:30%">
+                                   <select style="text-align: center; width: 100%" id="choose-component">
+                                       <option id="Diffuser">Diffuser</option>
+                                       <option id="Fan">Fan</option>
+                                       <option id="Compressor">Compressor</option>
+                                       <option id="Main Burner">Main Burner</option>
+                                       <option id="Compressor Turbine">Compressor Turbine</option>
+                                       <option id="Turbine Mixer">Turbine Mixer</option>
+                                       <option id="Fan Turbine">Fan Turbine</option>
+                                       <option id="After Burner">After Burner</option>
+                                       <option id="Core Nozzle">Core Nozzle</option>
+                                       <option id="Fan Nozzle">Fan Nozzle</option>
+                                       <option id="Nozzle Mixer">Nozzle Mixer</option>
+                                       <option id="Combined Nozzle">Combined Nozzle</option>
+                                   </select><br><br>
+                               </div>
+                               </div>
+                               <div class="configurecomponents" id="part-parameters" style="width: 50%; margin: auto;">
+                                   <div>Molecular Weight</div>
+                                   <input style="width:100px" type="number" step="0.1" value=28.8 id="mw"><br>
+                                   <div>Gamma</div>
+                                   <input style="width:100px" type="number" step="0.01" value=1.4 id="gamma"><br>
+                                   <div>Efficiency</div>
+                                   <input style="width:100px" type="number" step="0.01" value=0.9 id="efficiency">
+                               </div><br><br>
+                               <button id='submit-button' onclick="return addComponent()">Add Component</button>
+                            </div>
+                         </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.panel -->
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="table">Performance Metrics</h2>
+                        <table class="w3-table-all">
+                             <tr class="w3-light-grey">
+                                  <th>T01 (K)</th>
+                                  <th>P01 (kPa)</th>
+                                  <th>T02 (K)</th>
+                                  <th>P02 (kPa)</th>
+                                  <th>T03 (K)</th>
+                                  <th>P03 (kPa)</th>
+                                  <th>T04 (K)</th>
+                                  <th>P04 (kPa)</th>
+                                  <th>T05.1 (K)</th>
+                                  <th>P05.1 (kPa)</th>
+                                  <th>T05.m (K)</th>
+                                  <th>P05.m (kPa)</th>
+                             </tr>
+                             <tr>
+                                  <td id="out-t01"></td>
+                                  <td id="out-p01"></td>
+                                  <td id="out-t02"></td>
+                                  <td id="out-p02"></td>
+                                  <td id="out-t03"></td>
+                                  <td id="out-p03"></td>
+                                  <td id="out-t04"></td>
+                                  <td id="out-p04"></td>
+                                  <td id="out-t05-1"></td>
+                                  <td id="out-p05-1"></td>
+                                  <td id="out-t05-m"></td>
+                                  <td id="out-p05-m"></td>
+                             </tr>
+                        </table>
+
+                        <table class="w3-table-all">
+                             <tr class="w3-light-grey">
+                                  <th>T05.2 (K)</th>
+                                  <th>P05.2 (kPa)</th>
+                                  <th>T06 (K)</th>
+                                  <th>P06 (kPa)</th>
+                                  <th>Te (K)</th>
+                                  <th>Pe (kPa)</th>
+                                  <th>Tef (K)</th>
+                                  <th>Pef (kPa)</th>
+                                  <th>T07 (K)</th>
+                                  <th>Gamma nm</th>
+                                  <th>P07 (kPa)</th>
+                                  <th>Tec (K)</th>
+                             </tr>
+                             <tr>
+                                  <td id="out-t05-2"></td>
+                                  <td id="out-p05-2"></td>
+                                  <td id="out-t06"></td>
+                                  <td id="out-p06"></td>
+                                  <td id="out-te"></td>
+                                  <td id="out-pe"></td>
+                                  <td id="out-tef"></td>
+                                  <td id="out-pef"></td>
+                                  <td id="out-t07"></td>
+                                  <td id="out-gamma-nm"></td>
+                                  <td id="out-p07"></td>
+                                  <td id="out-tec"></td>
+                             </tr>
+                        </table>
+
+                        <table class="w3-table-all">
+                             <tr class="w3-light-grey">
+                                  <th>ue (m/s)</th>
+                                  <th>uef (m/s)</th>
+                                  <th>T/ma (kN*s/kg)</th>
+                                  <th>TSFC (kg/(kN*s))</th>
+                                  <th>nth</th>
+                                  <th>n0</th>
+                                  <th>wc (kJ/kg)</th>
+                                  <th>wp (kJ/kg)</th>
+                                  <th>wft (kJ/kg)</th>
+                                  <th>fmax</th>
+                                  <th>fmax,ab</th>
+                                  <th>T/ma max (kN*s/kg)</th>
+                             </tr>
+                             <tr>
+                                  <td id="out-ue"></td>
+                                  <td id="out-uef"></td>
+                                  <td id="out-t-ma"></td>
+                                  <td id="out-tsfc"></td>
+                                  <td id="out-nth"></td>
+                                  <td id="out-n0"></td>
+                                  <td id="out-wc"></td>
+                                  <td id="out-wp"></td>
+                                  <td id="out-wft"></td>
+                                  <td id="out-fmax"></td>
+                                  <td id="out-fmax,ab"></td>
+                                  <td id="out-t-ma-max"></td>
+                             </tr>
+                        </table>
+
+                        <table  class="w3-table-all">
+                            <span style="font-size: 19px"><br>Combined Nozzle</span><br>
+                             <tr  class="w3-light-grey">
+                                  <th>uec (m/s)</th>
+                                  <th>T/ma (kN*s/kg)</th>
+                                  <th>TSFC (kg/(kN*s))</th>
+                                  <th>n0</th>
+                                  <th>T/ma max (kN*s/kg)</th>
+                             </tr>
+                             <tr>
+                                  <td id="out-uec"></td>
+                                  <td id="out-t-ma-c"></td>
+                                  <td id="out-tsfc-c"></td>
+                                  <td id="out-n0-c"></td>
+                                  <td id="out-t-ma-c-max"></td>
+                             </tr>
+                        </table>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/EngineParts/EditEngine.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/EngineParts/EngineParts.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/Analysis.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/OutputTable.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="../vendor/raphael/raphael.min.js"></script>
+    <script src="../vendor/morrisjs/morris.min.js"></script>
+    <script src="../data/morris-data.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>
